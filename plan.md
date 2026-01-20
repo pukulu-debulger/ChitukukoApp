@@ -372,4 +372,4 @@ For questions, suggestions, or contributions:
 - Email: [Contact Email]
 - Community: [Discussion Forum]
 
-**Let's build something that makes a real difference for Malawian farmers! 🌾🇲🇼**
+**Let's build something that makes a real difference for Malawian farmers! 🌾🇲🇼**n
