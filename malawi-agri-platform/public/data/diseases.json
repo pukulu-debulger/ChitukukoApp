@@ -1,0 +1,170 @@
+{
+  "diseases": [
+    {
+      "id": "fall-armyworm",
+      "name": "Fall Armyworm",
+      "nameChichewa": "Mbawa",
+      "crops": ["Maize", "Sorghum", "Rice"],
+      "severity": "High",
+      "symptoms": [
+        "Irregular holes in leaves",
+        "Sawdust-like frass near whorl",
+        "Damage to young leaves and tassels",
+        "Caterpillars visible in plant whorl"
+      ],
+      "causes": "Moth lays eggs on leaves, larvae feed on plant",
+      "treatment": [
+        "Scout fields regularly, especially early morning",
+        "Hand-pick larvae when population is low",
+        "Apply approved pesticides (e.g., cypermethrin)",
+        "Use biological control: Neem extracts",
+        "Plant early to avoid peak infestation period"
+      ],
+      "prevention": [
+        "Deep plowing to expose pupae",
+        "Intercropping with legumes",
+        "Maintain field hygiene",
+        "Use resistant varieties when available"
+      ],
+      "imageUrl": "/images/diseases/fall-armyworm.jpg"
+    },
+    {
+      "id": "maize-streak-virus",
+      "name": "Maize Streak Virus",
+      "nameChichewa": "Matenda a Chimanga",
+      "crops": ["Maize"],
+      "severity": "High",
+      "symptoms": [
+        "Yellow streaks on leaves parallel to veins",
+        "Stunted plant growth",
+        "Reduced ear size",
+        "Plants may die if infected early"
+      ],
+      "causes": "Transmitted by leafhoppers",
+      "treatment": [
+        "No cure - remove infected plants",
+        "Control leafhopper population",
+        "Use insecticides early in season",
+        "Avoid planting near infected fields"
+      ],
+      "prevention": [
+        "Plant resistant varieties",
+        "Plant early in season",
+        "Control weeds that host leafhoppers",
+        "Use certified disease-free seeds"
+      ],
+      "imageUrl": "/images/diseases/maize-streak.jpg"
+    },
+    {
+      "id": "cassava-mosaic",
+      "name": "Cassava Mosaic Disease",
+      "nameChichewa": "Matenda a Chinangwa",
+      "crops": ["Cassava"],
+      "severity": "High",
+      "symptoms": [
+        "Yellow and green mosaic pattern on leaves",
+        "Leaf distortion and curling",
+        "Reduced leaf size",
+        "Stunted plant growth",
+        "Poor root development"
+      ],
+      "causes": "Virus transmitted by whiteflies and infected cuttings",
+      "treatment": [
+        "Remove and destroy infected plants",
+        "Control whitefly population",
+        "Use virus-free planting material only"
+      ],
+      "prevention": [
+        "Plant resistant varieties",
+        "Use certified disease-free cuttings",
+        "Remove infected plants immediately",
+        "Control whiteflies with appropriate pesticides",
+        "Maintain 1-2 month planting gap"
+      ],
+      "imageUrl": "/images/diseases/cassava-mosaic.jpg"
+    },
+    {
+      "id": "groundnut-rosette",
+      "name": "Groundnut Rosette Disease",
+      "nameChichewa": "Matenda a Mtedza",
+      "crops": ["Groundnuts"],
+      "severity": "High",
+      "symptoms": [
+        "Yellowing of young leaves",
+        "Stunted bushy growth",
+        "Dark green mosaic on leaves",
+        "Severe yield loss"
+      ],
+      "causes": "Virus transmitted by aphids",
+      "treatment": [
+        "Remove infected plants immediately",
+        "Control aphid population",
+        "Use recommended insecticides"
+      ],
+      "prevention": [
+        "Plant early (November-December)",
+        "Use resistant varieties",
+        "Control aphids early in season",
+        "Avoid late planting",
+        "Remove volunteer groundnut plants"
+      ],
+      "imageUrl": "/images/diseases/groundnut-rosette.jpg"
+    },
+    {
+      "id": "bean-rust",
+      "name": "Bean Rust",
+      "nameChichewa": "Dzimbiri la Nyemba",
+      "crops": ["Beans"],
+      "severity": "Medium",
+      "symptoms": [
+        "Small brown/reddish pustules on leaves",
+        "Yellow halo around pustules",
+        "Premature leaf drop",
+        "Reduced pod formation"
+      ],
+      "causes": "Fungal infection favored by humid conditions",
+      "treatment": [
+        "Apply fungicides (mancozeb, copper-based)",
+        "Remove and destroy infected leaves",
+        "Improve air circulation",
+        "Reduce overhead irrigation"
+      ],
+      "prevention": [
+        "Use resistant varieties",
+        "Rotate crops (3-year cycle)",
+        "Avoid dense planting",
+        "Plant in well-drained areas",
+        "Remove crop residues after harvest"
+      ],
+      "imageUrl": "/images/diseases/bean-rust.jpg"
+    },
+    {
+      "id": "late-blight",
+      "name": "Late Blight (Potato/Tomato)",
+      "nameChichewa": "Matenda a Mbatata",
+      "crops": ["Potato", "Tomato"],
+      "severity": "High",
+      "symptoms": [
+        "Dark brown/black lesions on leaves",
+        "White fuzzy growth on leaf undersides",
+        "Rapid plant death in humid conditions",
+        "Brown rot on tubers/fruits"
+      ],
+      "causes": "Fungal infection spread by rain and wind",
+      "treatment": [
+        "Apply copper-based fungicides",
+        "Remove infected plants immediately",
+        "Improve drainage",
+        "Avoid overhead watering"
+      ],
+      "prevention": [
+        "Use certified disease-free seeds/tubers",
+        "Plant in well-drained soil",
+        "Space plants properly",
+        "Apply preventive fungicides",
+        "Harvest before rainy season"
+      ],
+      "imageUrl": "/images/diseases/late-blight.jpg"
+    }
+  ]
+}

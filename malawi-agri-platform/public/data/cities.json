@@ -1,0 +1,14 @@
+{
+  "cities": [
+    { "id": "lilongwe", "name": "Lilongwe", "region": "Central" },
+    { "id": "blantyre", "name": "Blantyre", "region": "Southern" },
+    { "id": "mzuzu", "name": "Mzuzu", "region": "Northern" },
+    { "id": "zomba", "name": "Zomba", "region": "Southern" },
+    { "id": "kasungu", "name": "Kasungu", "region": "Central" },
+    { "id": "mangochi", "name": "Mangochi", "region": "Southern" },
+    { "id": "salima", "name": "Salima", "region": "Central" },
+    { "id": "karonga", "name": "Karonga", "region": "Northern" },
+    { "id": "mulanje", "name": "Mulanje", "region": "Southern" },
+    { "id": "thyolo", "name": "Thyolo", "region": "Southern" }
+  ]
+}

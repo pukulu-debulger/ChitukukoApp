@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import Header from './components/common/Header';
+import Weather from './pages/Weather';
+import CropCalendar from './pages/Crops';
+import MarketPrices from './pages/Markets';
+import Diseases from './pages/Diseases';
 import Home from './pages/Home';
 
 function App() {
@@ -11,10 +15,10 @@ function App() {
       
       <main>
         {activePage === 'home' && <Home />}
-        {activePage === 'weather' && <div className="container mx-auto px-4 py-8"><h2 className="text-3xl font-bold">Weather Page - Coming Soon</h2></div>}
-        {activePage === 'crops' && <div className="container mx-auto px-4 py-8"><h2 className="text-3xl font-bold">Crops Page - Coming Soon</h2></div>}
-        {activePage === 'markets' && <div className="container mx-auto px-4 py-8"><h2 className="text-3xl font-bold">Markets Page - Coming Soon</h2></div>}
-        {activePage === 'diseases' && <div className="container mx-auto px-4 py-8"><h2 className="text-3xl font-bold">Diseases Page - Coming Soon</h2></div>}
+        {activePage === 'weather' && <Weather />}
+        {activePage === 'crops' && <CropCalendar />}
+        {activePage === 'markets' && <MarketPrices />}
+        {activePage === 'diseases' && <Diseases />}
       </main>
     </div>
   );

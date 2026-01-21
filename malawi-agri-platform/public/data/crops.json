@@ -1,0 +1,118 @@
+{
+  "crops": [
+    {
+      "id": "maize",
+      "name": "Maize",
+      "nameChichewa": "Chimanga",
+      "plantingMonths": ["November", "December"],
+      "harvestMonths": ["April", "May"],
+      "soilType": "Well-drained loamy soil",
+      "rainfall": "500-800mm per season",
+      "temperature": "20-30°C",
+      "spacing": "75cm x 25cm",
+      "fertilizer": "NPK 23:21:0+4S at planting, Urea top-dressing",
+      "pests": ["Fall Armyworm", "Stalk Borer", "Aphids"],
+      "tips": [
+        "Plant when rains are consistent",
+        "Apply fertilizer 2-3 weeks after planting",
+        "Weed regularly in first 6 weeks",
+        "Scout for fall armyworm weekly"
+      ]
+    },
+    {
+      "id": "groundnuts",
+      "name": "Groundnuts",
+      "nameChichewa": "Mtedza",
+      "plantingMonths": ["November", "December"],
+      "harvestMonths": ["March", "April"],
+      "soilType": "Light sandy loam",
+      "rainfall": "500-600mm per season",
+      "temperature": "20-30°C",
+      "spacing": "45cm x 15cm",
+      "fertilizer": "D Compound at planting",
+      "pests": ["Aphids", "Leaf Miner", "Termites"],
+      "tips": [
+        "Rotate with cereals",
+        "Avoid waterlogged areas",
+        "Harvest when leaves turn yellow",
+        "Dry properly to prevent aflatoxin"
+      ]
+    },
+    {
+      "id": "beans",
+      "name": "Beans",
+      "nameChichewa": "Nyemba",
+      "plantingMonths": ["November", "December", "January"],
+      "harvestMonths": ["February", "March", "April"],
+      "soilType": "Well-drained soil",
+      "rainfall": "400-600mm per season",
+      "temperature": "18-24°C",
+      "spacing": "50cm x 10cm",
+      "fertilizer": "D Compound at planting",
+      "pests": ["Bean Fly", "Aphids", "Pod Borers"],
+      "tips": [
+        "Can be intercropped with maize",
+        "Avoid planting in same field consecutively",
+        "Harvest when pods are dry",
+        "Store in airtight containers"
+      ]
+    },
+    {
+      "id": "tobacco",
+      "name": "Tobacco",
+      "nameChichewa": "Fodya",
+      "plantingMonths": ["October", "November"],
+      "harvestMonths": ["March", "April", "May"],
+      "soilType": "Sandy loam",
+      "rainfall": "750-1000mm per season",
+      "temperature": "20-27°C",
+      "spacing": "90cm x 60cm",
+      "fertilizer": "NPK and potassium-rich fertilizers",
+      "pests": ["Aphids", "Cutworms", "Tobacco Hornworm"],
+      "tips": [
+        "Transplant seedlings after 6-8 weeks",
+        "Requires careful disease management",
+        "Top and sucker regularly",
+        "Proper curing is essential"
+      ]
+    },
+    {
+      "id": "rice",
+      "name": "Rice",
+      "nameChichewa": "Mpunga",
+      "plantingMonths": ["November", "December"],
+      "harvestMonths": ["April", "May"],
+      "soilType": "Clay loam (for wetland rice)",
+      "rainfall": "1000-1500mm per season",
+      "temperature": "20-35°C",
+      "spacing": "20cm x 20cm",
+      "fertilizer": "Urea and NPK in splits",
+      "pests": ["Rice Weevil", "Stem Borers", "Birds"],
+      "tips": [
+        "Maintain water level at 5-10cm",
+        "Weed control is critical",
+        "Harvest when 80% grains are golden",
+        "Dry to 14% moisture content"
+      ]
+    },
+    {
+      "id": "cassava",
+      "name": "Cassava",
+      "nameChichewa": "Chinangwa",
+      "plantingMonths": ["October", "November", "December"],
+      "harvestMonths": ["July", "August", "September"],
+      "soilType": "Well-drained sandy soil",
+      "rainfall": "500-1000mm per season",
+      "temperature": "25-35°C",
+      "spacing": "1m x 1m",
+      "fertilizer": "Minimal - organic manure preferred",
+      "pests": ["Cassava Mosaic Disease", "Mealybugs", "Green Mites"],
+      "tips": [
+        "Use disease-free cuttings",
+        "Can grow in poor soils",
+        "Harvest after 9-12 months",
+        "Process quickly after harvest"
+      ]
+    }
+  ]
+}
