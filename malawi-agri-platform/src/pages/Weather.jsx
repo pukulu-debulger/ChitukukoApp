@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MapPin, AlertCircle, Cloud, Droplets, Wind, Sun, CloudRain, Thermometer, Eye } from 'lucide-react';
-import WeatherCard from '../components/weather/WeatherCard';
-import { getCurrentWeather } from '../utils/weatherApi';
+import { getCurrentWeather, getWeatherAlerts, getDetailedForecast } from '../utils/weatherApi';
 
 function Weather() {
   const [cities, setCities] = useState([]);
@@ -9,6 +8,9 @@ function Weather() {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [alerts, setAlerts] = useState([]);
+  const [detailedForecast, setDetailedForecast] = useState(null);
+  const [showHourly, setShowHourly] = useState(false);
 
   // Load cities
   useEffect(() => {
@@ -22,51 +24,52 @@ function Weather() {
   useEffect(() => {
     if (!selectedCity) return;
 
-   const getWeather = async () => {
-  setLoading(true);
-  setError(null);
-  
-  try {
-    const data = await getCurrentWeather(selectedCity);
-    
-    // Transform API data to match your existing structure
-    setWeather({
-      name: selectedCity,
-      main: { 
-        temp: data.temp, 
-        humidity: data.humidity,
-        feels_like: data.feelsLike,
-        temp_min: data.temp - 2, // Estimate
-        temp_max: data.temp + 4  // Estimate
-      },
-      weather: [{ 
-        main: data.condition, 
-        description: data.description, 
-        icon: data.icon 
-      }],
-      wind: { speed: data.windSpeed / 3.6 }, // Convert back to m/s
-      visibility: 10000, // Default value
-      clouds: { all: 40 } // Default value
-    });
-  } catch (err) {
-    setError('Could not load weather data. Please check your internet connection.');
-    console.error(err);
-  }
-  
-  setLoading(false);
-};
+    const getWeather = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Fetch all weather data in parallel
+        const [currentData, alertsData, forecastData] = await Promise.all([
+          getCurrentWeather(selectedCity),
+          getWeatherAlerts(selectedCity),
+          getDetailedForecast(selectedCity)
+        ]);
+        
+        // Transform current weather data
+        setWeather({
+          name: selectedCity,
+          main: { 
+            temp: currentData.temp, 
+            humidity: currentData.humidity,
+            feels_like: currentData.feelsLike,
+            temp_min: currentData.temp - 2,
+            temp_max: currentData.temp + 4
+          },
+          weather: [{ 
+            main: currentData.condition, 
+            description: currentData.description, 
+            icon: currentData.icon 
+          }],
+          wind: { speed: currentData.windSpeed / 3.6 },
+          visibility: 10000,
+          clouds: { all: 40 }
+        });
+        
+        // Set alerts and forecast
+        setAlerts(alertsData);
+        setDetailedForecast(forecastData);
+        
+      } catch (err) {
+        setError('Could not load weather data. Please check your internet connection.');
+        console.error(err);
+      }
+      
+      setLoading(false);
+    };
 
     getWeather();
   }, [selectedCity]);
-
-  // Demo forecast data (in real app, use forecast API)
-  const forecastData = [
-    { day: 'Mon', temp: 29, icon: Sun, condition: 'Sunny' },
-    { day: 'Tue', temp: 27, icon: CloudRain, condition: 'Rainy' },
-    { day: 'Wed', temp: 28, icon: Cloud, condition: 'Cloudy' },
-    { day: 'Thu', temp: 30, icon: Sun, condition: 'Sunny' },
-    { day: 'Fri', temp: 26, icon: CloudRain, condition: 'Rainy' },
-  ];
 
   const getFarmingTips = () => {
     if (!weather) return [];
@@ -159,9 +162,42 @@ function Weather() {
           <div>
             <p className="text-sm text-yellow-800 font-semibold">{error}</p>
             <p className="text-xs text-yellow-600 mt-1">
-              Add your OpenWeatherMap API key in src/utils/api.js to see real data
+              Check your API key in .env file
             </p>
           </div>
+        </div>
+      )}
+
+      {/* Weather Alerts */}
+      {!loading && alerts.length > 0 && (
+        <div className="mb-6 space-y-3">
+          {alerts.map((alert, index) => {
+            const severityColors = {
+              high: 'bg-red-50 border-red-500 text-red-800',
+              medium: 'bg-amber-50 border-amber-500 text-amber-800',
+              low: 'bg-blue-50 border-blue-500 text-blue-800'
+            };
+            
+            return (
+              <div 
+                key={index}
+                className={`${severityColors[alert.severity]} border-l-4 rounded-lg p-4 flex items-start space-x-3 shadow-md animate-pulse`}
+              >
+                <span className="text-2xl flex-shrink-0">{alert.icon}</span>
+                <div className="flex-1">
+                  <p className="font-bold text-lg">{alert.title}</p>
+                  <p className="text-sm mt-1">{alert.description}</p>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${
+                  alert.severity === 'high' ? 'bg-red-200 text-red-900' :
+                  alert.severity === 'medium' ? 'bg-amber-200 text-amber-900' :
+                  'bg-blue-200 text-blue-900'
+                }`}>
+                  {alert.severity}
+                </span>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -254,28 +290,99 @@ function Weather() {
           </div>
 
           {/* 5-Day Forecast */}
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <Cloud className="w-6 h-6 mr-2 text-primary-600" />
-              5-Day Forecast
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              {forecastData.map((day, idx) => {
-                const Icon = day.icon;
-                return (
-                  <div 
-                    key={idx} 
-                    className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 text-center hover:from-primary-50 hover:to-primary-100 hover:shadow-md transition-all cursor-pointer border-2 border-transparent hover:border-primary-500"
-                  >
-                    <p className="text-gray-600 font-semibold mb-4">{day.day}</p>
-                    <Icon className="w-12 h-12 mx-auto mb-4 text-amber-500" />
-                    <p className="text-3xl font-bold text-gray-900 mb-1">{day.temp}°</p>
-                    <p className="text-xs text-gray-500">{day.condition}</p>
+          {detailedForecast && (
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 flex items-center">
+                  <Cloud className="w-6 h-6 mr-2 text-primary-600" />
+                  5-Day Forecast
+                </h3>
+                <button
+                  onClick={() => setShowHourly(!showHourly)}
+                  className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-all"
+                >
+                  {showHourly ? 'Show Daily' : 'Show Hourly'}
+                </button>
+              </div>
+              
+              {/* Daily Forecast */}
+              {!showHourly && (
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  {detailedForecast.daily.map((day, idx) => (
+                    <div 
+                      key={idx} 
+                      className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 text-center hover:from-primary-50 hover:to-primary-100 hover:shadow-md transition-all cursor-pointer border-2 border-transparent hover:border-primary-500"
+                    >
+                      <p className="text-gray-600 font-semibold mb-2">{day.day}</p>
+                      <p className="text-xs text-gray-500 mb-3">{day.fullDate}</p>
+                      <img 
+                        src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
+                        alt={day.condition}
+                        className="w-16 h-16 mx-auto mb-3"
+                      />
+                      <div className="space-y-1">
+                        <p className="text-3xl font-bold text-gray-900">{day.temp}°</p>
+                        <p className="text-xs text-gray-500">
+                          H: {day.maxTemp}° L: {day.minTemp}°
+                        </p>
+                        <p className="text-xs text-gray-600 mt-2">{day.condition}</p>
+                        <div className="mt-3 pt-3 border-t border-gray-200 text-xs text-gray-600 space-y-1">
+                          <div className="flex items-center justify-center gap-1">
+                            <Droplets className="w-3 h-3" />
+                            <span>{day.humidity}%</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-1">
+                            <Wind className="w-3 h-3" />
+                            <span>{day.windSpeed} km/h</span>
+                          </div>
+                          {day.precipitation > 0 && (
+                            <div className="flex items-center justify-center gap-1">
+                              <CloudRain className="w-3 h-3" />
+                              <span>{day.precipitation}%</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Hourly Forecast */}
+              {showHourly && detailedForecast.hourly && (
+                <div className="overflow-x-auto">
+                  <div className="flex gap-4 pb-4">
+                    {detailedForecast.hourly.map((hour, idx) => (
+                      <div 
+                        key={idx}
+                        className="flex-shrink-0 bg-gray-50 rounded-xl p-4 text-center min-w-[120px] hover:bg-primary-50 transition-all border-2 border-transparent hover:border-primary-500"
+                      >
+                        <p className="text-sm font-semibold text-gray-600 mb-2">{hour.time}</p>
+                        <img 
+                          src={`https://openweathermap.org/img/wn/${hour.icon}.png`}
+                          alt={hour.condition}
+                          className="w-12 h-12 mx-auto mb-2"
+                        />
+                        <p className="text-2xl font-bold text-gray-900 mb-2">{hour.temp}°</p>
+                        <div className="text-xs text-gray-600 space-y-1">
+                          <div className="flex items-center justify-center gap-1">
+                            <Wind className="w-3 h-3" />
+                            <span>{hour.windSpeed} km/h</span>
+                          </div>
+                          {hour.precipitation > 0 && (
+                            <div className="flex items-center justify-center gap-1 text-blue-600">
+                              <CloudRain className="w-3 h-3" />
+                              <span>{hour.precipitation}%</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                );
-              })}
+                </div>
+              )}
             </div>
-          </div>
+          )}
 
           {/* Weather Alert Info */}
           <div className="mt-8 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg">
