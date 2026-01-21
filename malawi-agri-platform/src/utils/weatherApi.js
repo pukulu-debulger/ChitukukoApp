@@ -66,3 +66,175 @@ export async function getWeatherForecast(city) {
 export function getWeatherIconUrl(iconCode) {
   return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 }
+
+
+// Get weather alerts (if available)
+export async function getWeatherAlerts(city) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/weather?q=${city},MW&appid=${API_KEY}&units=metric`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Alert data not available');
+    }
+    
+    const data = await response.json();
+    
+    // Generate alerts based on weather conditions
+    const alerts = [];
+    
+    // Temperature alerts
+    if (data.main.temp > 35) {
+      alerts.push({
+        type: 'extreme_heat',
+        severity: 'high',
+        title: 'Extreme Heat Warning',
+        description: 'Temperature above 35°C. Protect crops and ensure adequate irrigation.',
+        icon: '🌡️'
+      });
+    } else if (data.main.temp > 32) {
+      alerts.push({
+        type: 'heat',
+        severity: 'medium',
+        title: 'High Temperature Alert',
+        description: 'Temperature above 32°C. Monitor crop water needs closely.',
+        icon: '☀️'
+      });
+    }
+    
+    // Wind alerts
+    if (data.wind.speed * 3.6 > 40) {
+      alerts.push({
+        type: 'wind',
+        severity: 'high',
+        title: 'Strong Wind Warning',
+        description: 'Wind speeds above 40 km/h. Secure structures and protect young plants.',
+        icon: '💨'
+      });
+    }
+    
+    // Rain alerts
+    if (data.weather[0].main === 'Rain' || data.weather[0].main === 'Thunderstorm') {
+      alerts.push({
+        type: 'rain',
+        severity: 'medium',
+        title: 'Rainfall Alert',
+        description: 'Rain expected. Good for crops but delay spraying activities.',
+        icon: '🌧️'
+      });
+    }
+    
+    // Humidity alerts
+    if (data.main.humidity > 80) {
+      alerts.push({
+        type: 'humidity',
+        severity: 'medium',
+        title: 'High Humidity Alert',
+        description: 'Humidity above 80%. Monitor for fungal diseases and pests.',
+        icon: '💧'
+      });
+    }
+    
+    // Low temperature alert
+    if (data.main.temp < 15) {
+      alerts.push({
+        type: 'cold',
+        severity: 'medium',
+        title: 'Low Temperature Alert',
+        description: 'Temperature below 15°C. Protect sensitive crops from cold damage.',
+        icon: '❄️'
+      });
+    }
+    
+    return alerts;
+  } catch (error) {
+    console.error('Error fetching weather alerts:', error);
+    return [];
+  }
+}
+
+// Get detailed forecast with hourly data
+export async function getDetailedForecast(city) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/forecast?q=${city},MW&appid=${API_KEY}&units=metric&cnt=40`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Detailed forecast not available');
+    }
+    
+    const data = await response.json();
+    
+    return {
+      daily: getDailyForecasts(data.list),
+      hourly: data.list.slice(0, 8).map(item => ({
+        time: new Date(item.dt * 1000).toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        }),
+        temp: Math.round(item.main.temp),
+        condition: item.weather[0].main,
+        icon: item.weather[0].icon,
+        precipitation: item.pop * 100, // Probability of precipitation
+        windSpeed: Math.round(item.wind.speed * 3.6),
+      }))
+    };
+  } catch (error) {
+    console.error('Error fetching detailed forecast:', error);
+    throw error;
+  }
+}
+
+// Helper function to process daily forecasts
+function getDailyForecasts(forecastList) {
+  const dailyData = {};
+  
+  forecastList.forEach(item => {
+    const date = new Date(item.dt * 1000).toDateString();
+    
+    if (!dailyData[date]) {
+      dailyData[date] = {
+        temps: [],
+        conditions: [],
+        icons: [],
+        humidity: [],
+        wind: [],
+        precipitation: []
+      };
+    }
+    
+    dailyData[date].temps.push(item.main.temp);
+    dailyData[date].conditions.push(item.weather[0].main);
+    dailyData[date].icons.push(item.weather[0].icon);
+    dailyData[date].humidity.push(item.main.humidity);
+    dailyData[date].wind.push(item.wind.speed * 3.6);
+    dailyData[date].precipitation.push(item.pop * 100);
+  });
+  
+  return Object.keys(dailyData).slice(0, 5).map(date => {
+    const data = dailyData[date];
+    const avgTemp = Math.round(data.temps.reduce((a, b) => a + b) / data.temps.length);
+    const maxTemp = Math.round(Math.max(...data.temps));
+    const minTemp = Math.round(Math.min(...data.temps));
+    const mostCommonCondition = data.conditions.sort((a,b) =>
+      data.conditions.filter(v => v===a).length - data.conditions.filter(v => v===b).length
+    ).pop();
+    const mostCommonIcon = data.icons[Math.floor(data.icons.length / 2)];
+    
+    return {
+      date: new Date(date),
+      day: new Date(date).toLocaleDateString('en-US', { weekday: 'short' }),
+      fullDate: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      temp: avgTemp,
+      maxTemp,
+      minTemp,
+      condition: mostCommonCondition,
+      icon: mostCommonIcon,
+      humidity: Math.round(data.humidity.reduce((a, b) => a + b) / data.humidity.length),
+      windSpeed: Math.round(data.wind.reduce((a, b) => a + b) / data.wind.length),
+      precipitation: Math.round(Math.max(...data.precipitation)),
+    };
+  });
+}
