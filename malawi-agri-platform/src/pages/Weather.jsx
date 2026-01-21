@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MapPin, AlertCircle, Cloud, Droplets, Wind, Sun, CloudRain, Thermometer, Eye } from 'lucide-react';
 import WeatherCard from '../components/weather/WeatherCard';
-import { fetchWeatherByCity } from '../utils/api';
+import { getCurrentWeather } from '../utils/weatherApi';
 
 function Weather() {
   const [cities, setCities] = useState([]);
@@ -22,33 +22,39 @@ function Weather() {
   useEffect(() => {
     if (!selectedCity) return;
 
-    const getWeather = async () => {
-      setLoading(true);
-      setError(null);
-      const data = await fetchWeatherByCity(selectedCity);
-      
-      if (data) {
-        setWeather(data);
-      } else {
-        setError('Could not load weather data. Using demo data.');
-        // Demo data for testing without API key
-        setWeather({
-          name: selectedCity,
-          main: { 
-            temp: 28, 
-            humidity: 65,
-            feels_like: 30,
-            temp_min: 22,
-            temp_max: 32
-          },
-          weather: [{ main: 'Clouds', description: 'partly cloudy', icon: '02d' }],
-          wind: { speed: 3.5 },
-          visibility: 10000,
-          clouds: { all: 40 }
-        });
-      }
-      setLoading(false);
-    };
+   const getWeather = async () => {
+  setLoading(true);
+  setError(null);
+  
+  try {
+    const data = await getCurrentWeather(selectedCity);
+    
+    // Transform API data to match your existing structure
+    setWeather({
+      name: selectedCity,
+      main: { 
+        temp: data.temp, 
+        humidity: data.humidity,
+        feels_like: data.feelsLike,
+        temp_min: data.temp - 2, // Estimate
+        temp_max: data.temp + 4  // Estimate
+      },
+      weather: [{ 
+        main: data.condition, 
+        description: data.description, 
+        icon: data.icon 
+      }],
+      wind: { speed: data.windSpeed / 3.6 }, // Convert back to m/s
+      visibility: 10000, // Default value
+      clouds: { all: 40 } // Default value
+    });
+  } catch (err) {
+    setError('Could not load weather data. Please check your internet connection.');
+    console.error(err);
+  }
+  
+  setLoading(false);
+};
 
     getWeather();
   }, [selectedCity]);
