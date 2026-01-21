@@ -5,6 +5,7 @@ import CropCalendar from './pages/Crops';
 import MarketPrices from './pages/Markets';
 import Diseases from './pages/Diseases';
 import Home from './pages/Home';
+import Footer from './components/common/Footer';
 
 function App() {
   const [activePage, setActivePage] = useState('home');
@@ -20,6 +21,7 @@ function App() {
         {activePage === 'markets' && <MarketPrices />}
         {activePage === 'diseases' && <Diseases />}
       </main>
+      <Footer />
     </div>
   );
 }
